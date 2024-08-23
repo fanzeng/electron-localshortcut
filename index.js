@@ -156,6 +156,8 @@ function register(win, accelerator, callback) {
 		wc = ANY_WINDOW;
 		callback = accelerator;
 		accelerator = win;
+	} else if (!win) {
+		wc = ANY_WINDOW;
 	} else {
 		wc = win.webContents;
 	}
@@ -163,7 +165,11 @@ function register(win, accelerator, callback) {
 	if (Array.isArray(accelerator) === true) {
 		accelerator.forEach(accelerator => {
 			if (typeof accelerator === 'string') {
-				register(win, accelerator, callback);
+				if (wc === ANY_WINDOW) {
+					register(null, accelerator, callback);
+				} else {
+					register(win, accelerator, callback);
+				}
 			}
 		});
 		return;
